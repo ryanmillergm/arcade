@@ -65,10 +65,10 @@ router.post("/", (req, res, next) => {
 router.put("/:id", (req, res, next) => {
   Game.update(
     {
-          title: req.body.title,
-          price: req.body.price,
-          releaseYear: req.body.releaseYear,
-          active: req.body.active
+      title: req.body.title,
+      price: req.body.price,
+      releaseYear: req.body.releaseYear,
+      active: req.body.active
   },
   {
     returning: true,
@@ -79,7 +79,7 @@ router.put("/:id", (req, res, next) => {
 )
   .then(([rowsUpdate, [updatedGame]])=> {
     res.setHeader("Content-Type", "application/json");
-    res.status(202).send(JSON.stringify(updated));
+    res.status(202).send(JSON.stringify(updatedGame));
   })
   .catch(error => {
     res.setHeader("Content-Type", "application/json");
@@ -95,10 +95,10 @@ router.delete("/:id", (req, res, next) => {
   })
   .then(game => {
     res.setHeader("Content-Type", "application/json");
-    res.status(204);
+    res.status(202).send(JSON.stringify("Game has been deleted."));
   })
   .catch(error => {
-    res.setHeader("Content-Type", "applicatoin/json");
+    res.setHeader("Content-Type", "application/json");
     res.status(500).send({error});
   });
 });
