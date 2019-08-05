@@ -1,8 +1,11 @@
+const Joi = require('@hapi/joi');
 var express = require("express");
 var router = express.Router();
 var Game = require('../../../models').Game;
+var d = new Date();
+var year = d.getFullYear();
 
-router.get("/", function(req, res, next) {
+router.get("/", (req, res, next) => {
   Game.findAll()
     .then(games => {
       res.setHeader("Content-Type", "application/json");
@@ -14,7 +17,7 @@ router.get("/", function(req, res, next) {
     });
 });
 
-router.get("/:id", function(req, res, next){
+router.get("/:id", (req, res, next) => {
   Game.findAll({
     where: {
       id: req.params.id
@@ -30,7 +33,19 @@ router.get("/:id", function(req, res, next){
   });
 });
 
-router.post("/", function(req, res, next) {
+router.post("/", (req, res, next) => {
+  const schema = {
+    title: Joi.string().min(2).max(30).required(),
+    price: Joi.number().integer(),
+    releaseYear: Joi.number().integer().min(1900).max(year),
+    active: Joi.string()
+  };
+  const result = Joi.validate(req.body, schema);
+  if (result.error) {
+    res.status(400).send(result.error.details[0].message);
+    return;
+  }
+
   Game.create({
           title: req.body.title,
           price: req.body.price,
@@ -47,7 +62,7 @@ router.post("/", function(req, res, next) {
     });
 });
 
-router.put("/:id", function(req, res, next) {
+router.put("/:id", (req, res, next) => {
   Game.update(
     {
           title: req.body.title,
@@ -72,7 +87,7 @@ router.put("/:id", function(req, res, next) {
   });
 });
 
-router.delete("/:id", function(req, res, next) {
+router.delete("/:id", (req, res, next) => {
   Game.destroy({
     where: {
       id: req.params.id
