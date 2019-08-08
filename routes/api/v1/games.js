@@ -68,7 +68,8 @@ router.put("/:id", (req, res, next) => {
       title: req.body.title,
       price: req.body.price,
       releaseYear: req.body.releaseYear,
-      active: req.body.active
+      active: req.body.active,
+      StoreId: req.body.StoreId
   },
   {
     returning: true,
